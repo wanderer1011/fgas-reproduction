@@ -130,75 +130,75 @@ If pyod won't install on 3.14, the fallback is to implement kNN, IForest and ECO
 Each milestone ends with tests passing and a git commit. ⏸ marks a point where I stop and ask you.
 
 ### M0 — Scaffolding
-- [ ] `git init`, `.gitignore` (data/raw, runs, `__pycache__`), skeleton folders, `requirements.txt`, empty configs
-- [ ] `paper/table2_paper.csv`, transcribed from the rendered Table 2, then checked by recomputing its column averages and "1st order" row
-- [ ] Commit: `M0: project scaffold and paper reference tables`
+- [x] `git init`, `.gitignore` (data/raw, runs, `__pycache__`), skeleton folders, `requirements.txt`, empty configs
+- [x] `paper/table2_paper.csv`, transcribed from the rendered Table 2, then checked by recomputing its column averages and "1st order" row
+- [x] Commit: `M0: project scaffold and paper reference tables`
 
 ### M1 — Data
-- [ ] `download_data.py`: fetch the 15 `.mat` files (~2 MB total) from `BELLoney/FGAS` at a **pinned commit SHA**, plus `Code/Example.mat` (280 B) for the parity test. Write SHA-256 checksums to `data/README.md`. These files are tiny, so approving this plan counts as approving the download.
-- [ ] `inspect_data.py`: report the keys, shapes, label column/field, NaN count, outlier count and any constant columns, compared with Table 1 (A#9, A#10)
-- [ ] ⏸ **If any shape or outlier count disagrees with Table 1, or the label column is ambiguous, stop and ask.**
-- [ ] Commit: `M1: data download, checksums, and inspection report`
+- [x] `download_data.py`: fetch the 15 `.mat` files (~2 MB total) from `BELLoney/FGAS` at a **pinned commit SHA**, plus `Code/Example.mat` (280 B) for the parity test. Write SHA-256 checksums to `data/README.md`. These files are tiny, so approving this plan counts as approving the download.
+- [x] `inspect_data.py`: report the keys, shapes, label column/field, NaN count, outlier count and any constant columns, compared with Table 1 (A#9, A#10)
+- [x] ⏸ **If any shape or outlier count disagrees with Table 1, or the label column is ambiguous, stop and ask.**
+- [x] Commit: `M1: data download, checksums, and inspection report`
 
 ### M2 — FGAS core + tests
-- [ ] Install `cupy-cuda13x[ctk]==14.2.0`, check that `cupy.cuda.runtime.getDeviceCount() == 1`, and run a tiny kernel. Report the installed size.
-- [ ] `model.py` with both FGD variants and the cpu/cuda backend
-- [ ] Test **GPU = CPU:** on random data and on Iris/Wine, cuda-float64 AS equals cpu-float64 AS to ≤ 1e-8, and cuda-float32 AS to ≤ 1e-4. Tests are skipped automatically when no GPU is present.
-- [ ] Test that batched-σ results equal a separate run for each σ
-- [ ] Test **parity with the official code:** `fgd=abs, tol=1e-4` on `Example.mat` with σ = 0.6 must reproduce the 10 scores printed in the official README (0.1390, 0.0539, …, 1.0000, 0.1325, 0.1692) to ±1e-4
-- [ ] Test that the efficient version equals a naive implementation of Eq. 3/7/8 (both variants, random small data, to 1e-10)
-- [ ] Test **d-equivalence** (A#3): scalar d vs a uniform restart vector gives the same AS to 1e-6 at a tight tolerance
-- [ ] Test that every row of P sums to 1; AS lies in [0,1] with min 0 and max 1; zero-sum rows are handled
-- [ ] `metrics.py` plus a test that sklearn's AUC equals the Eq. 13 brute force, including tied scores
-- [ ] Commit: `M2: FGAS implementation (squared/abs FGD) with parity tests`
+- [x] Install `cupy-cuda13x[ctk]==14.2.0`, check that `cupy.cuda.runtime.getDeviceCount() == 1`, and run a tiny kernel. Report the installed size.
+- [x] `model.py` with both FGD variants and the cpu/cuda backend
+- [x] Test **GPU = CPU:** on random data and on Iris/Wine, cuda-float64 AS equals cpu-float64 AS to ≤ 1e-8, and cuda-float32 AS to ≤ 1e-4. Tests are skipped automatically when no GPU is present.
+- [x] Test that batched-σ results equal a separate run for each σ
+- [x] Test **parity with the official code:** `fgd=abs, tol=1e-4` on `Example.mat` with σ = 0.6 must reproduce the 10 scores printed in the official README (0.1390, 0.0539, …, 1.0000, 0.1325, 0.1692) to ±1e-4
+- [x] Test that the efficient version equals a naive implementation of Eq. 3/7/8 (both variants, random small data, to 1e-10)
+- [x] Test **d-equivalence** (A#3): scalar d vs a uniform restart vector gives the same AS to 1e-6 at a tight tolerance
+- [x] Test that every row of P sums to 1; AS lies in [0,1] with min 0 and max 1; zero-sum rows are handled
+- [x] `metrics.py` plus a test that sklearn's AUC equals the Eq. 13 brute force, including tied scores
+- [x] Commit: `M2: FGAS implementation (squared/abs FGD) with parity tests`
 
 ### M3 — Smallest viable reproduction (minutes)
-- [ ] `exp_smoke.yaml`: Iris (111×4) and Wine (129×13), σ = 0.6, both variants → AUC, iteration count, runtime
-- [ ] Then the full σ grid on Iris and Wine → best σ and best AUC vs Table 2 (Iris 1.000, Wine 0.885) and vs the Fig. 4 readings
-- [ ] **Benchmark on Satellite** (largest n = 6435) and Musk (largest m = 166), full 20-σ sweep, under three settings: **cpu-float64**, **cuda-float64**, **cuda-float32**. Record wall time, peak VRAM/RAM, and the best-σ AUC difference vs cpu-float64.
-- [ ] **Backend choice rule:** use the fastest setting that passes the parity criterion in §5. If only cuda-float32 is fast enough, the sweep runs in float32 and the **best σ for each dataset is then re-scored in float64**. All numbers reported in Table 2 and RESULTS.md come from float64.
-- [ ] Commit: `M3: end-to-end smoke run on Iris/Wine`
-- [ ] ⏸ **Short report to you:** smoke numbers, the squared-vs-abs early signal, the CPU/GPU benchmark and the chosen backend, and runtime estimates for M4/M6/M7
+- [x] `exp_smoke.yaml`: Iris (111×4) and Wine (129×13), σ = 0.6, both variants → AUC, iteration count, runtime
+- [x] Then the full σ grid on Iris and Wine → best σ and best AUC vs Table 2 (Iris 1.000, Wine 0.885) and vs the Fig. 4 readings
+- [x] **Benchmark on Satellite** (largest n = 6435) and Musk (largest m = 166), full 20-σ sweep, under three settings: **cpu-float64**, **cuda-float64**, **cuda-float32**. Record wall time, peak VRAM/RAM, and the best-σ AUC difference vs cpu-float64.
+- [x] **Backend choice rule:** use the fastest setting that passes the parity criterion in §5. If only cuda-float32 is fast enough, the sweep runs in float32 and the **best σ for each dataset is then re-scored in float64**. All numbers reported in Table 2 and RESULTS.md come from float64.
+- [x] Commit: `M3: end-to-end smoke run on Iris/Wine`
+- [x] ⏸ **Short report to you:** smoke numbers, the squared-vs-abs early signal, the CPU/GPU benchmark and the chosen backend, and runtime estimates for M4/M6/M7
 
 ### M4 — Table 2 (FGAS column) + Fig. 4
-- [ ] `exp_table2.yaml`: 15 datasets × 20 σ × 2 FGD variants = 600 FGAS runs, plus σ = 1.0 logged
-- [ ] Runs on the backend chosen in M3. Estimated well under 30 min (Satellite dominates). **If M3 timing projects more than 30 min, ⏸ ask first.**
-- [ ] `make_table2.py` → ours vs paper per dataset, best σ, and Δ
-- [ ] `make_figures.py` → Fig. 4 in the paper's layout (2 panels: datasets 1–8 and 9–15, σ on 0–0.95, MATLAB-like markers)
-- [ ] Commit: `M4: FGAS sigma sweep, Table 2 FGAS column, Fig. 4`
+- [x] `exp_table2.yaml`: 15 datasets × 20 σ × 2 FGD variants = 600 FGAS runs, plus σ = 1.0 logged
+- [x] Runs on the backend chosen in M3. Estimated well under 30 min (Satellite dominates). **If M3 timing projects more than 30 min, ⏸ ask first.**
+- [x] `make_table2.py` → ours vs paper per dataset, best σ, and Δ
+- [x] `make_figures.py` → Fig. 4 in the paper's layout (2 panels: datasets 1–8 and 9–15, σ on 0–0.95, MATLAB-like markers)
+- [x] Commit: `M4: FGAS sigma sweep, Table 2 FGAS column, Fig. 4`
 
 ### M5 — Statistics + Fig. 3
-- [ ] `stats.py`, plus a test reproducing the paper's critical value **1.5610** and **CD 4.7659** from the paper's Table 2. τ_F should come out at 15.07 (paper: 15.1347).
-- [ ] Fig. 3 for (a) the paper's Table 2, as a sanity check of the plotting code, and (b) a mixed table with our FGAS, our re-run baselines, and the remaining paper-reported baselines (labelled)
-- [ ] Draw the CD diagram mirrored, with 14 on the left and 1 on the right, as in the paper
-- [ ] Commit: `M5: Friedman/Nemenyi and CD diagram`
+- [x] `stats.py`, plus a test reproducing the paper's critical value **1.5610** and **CD 4.7659** from the paper's Table 2. τ_F should come out at 15.07 (paper: 15.1347).
+- [x] Fig. 3 for (a) the paper's Table 2, as a sanity check of the plotting code, and (b) a mixed table with our FGAS, our re-run baselines, and the remaining paper-reported baselines (labelled)
+- [x] Draw the CD diagram mirrored, with 14 on the left and 1 on the right, as in the paper
+- [x] Commit: `M5: Friedman/Nemenyi and CD diagram`
 
 ### M6 — Baselines + Fig. 1
-- [ ] ⏸ **Ask before installing pyod/PyNomaly** (heavy: numba).
-- [ ] `exp_baselines.yaml`:
+- [x] ⏸ **Ask before installing pyod/PyNomaly** (heavy: numba).
+- [x] `exp_baselines.yaml`:
   - kNN, COF, FastABOD, LoOP: k = 1…60
   - IForest: 100 trees, 5 seeds, report mean ± std
   - ECOD: no parameters
-- [ ] Cost: COF and FastABOD scale as O(n²)–O(n²k) over 60 k values. On Satellite and Page this may take more than 30 min, so **⏸ ask before launching if the estimate exceeds 30 min**. A fallback is a reduced k grid on the largest datasets, which would be logged.
-- [ ] Fig. 1: ROC curves (5×3 grid, FPR%/TPR%, FGAS in black) for FGAS plus the re-run baselines only. Paper-only baselines can't be plotted because their scores don't exist; that will be stated in the caption.
-- [ ] Commit: `M6: baselines and ROC figure`
+- [x] Cost: COF and FastABOD scale as O(n²)–O(n²k) over 60 k values. On Satellite and Page this may take more than 30 min, so **⏸ ask before launching if the estimate exceeds 30 min**. A fallback is a reduced k grid on the largest datasets, which would be logged.
+- [x] Fig. 1: ROC curves (5×3 grid, FPR%/TPR%, FGAS in black) for FGAS plus the re-run baselines only. Paper-only baselines can't be plotted because their scores don't exist; that will be stated in the caption.
+- [x] Commit: `M6: baselines and ROC figure`
 
 ### M7 — Noise robustness (Fig. 2)
-- [ ] `noise.py` per A#7: for each attribute, ⌈x·n⌉ random samples are replaced by U[min_a, max_a] on the raw data, then scaled
-- [ ] Main protocol: x ∈ {0, 0.05, …, 0.5} × 5 seeds × 20 σ re-tuned per level (A#6), giving 15 × 11 × 5 × 20 = 16,500 FGAS runs. Secondary protocol: σ fixed at the clean best value.
-- [ ] This is where the GPU helps most. Each (dataset, level, seed) runs the batched 20-σ GPU kernel once, so 825 batched runs instead of 16,500 single ones. ⏸ Ask before launching if the timing measured in M3/M4 projects more than 30 min.
-- [ ] Fig. 2 in the paper's layout (2 panels, noise level 0–0.5), plotting the mean over seeds with a min–max band. A single-seed version is also produced to match the paper exactly.
-- [ ] Commit: `M7: attribute-noise experiment and Fig. 2`
+- [x] `noise.py` per A#7: for each attribute, ⌈x·n⌉ random samples are replaced by U[min_a, max_a] on the raw data, then scaled
+- [x] Main protocol: x ∈ {0, 0.05, …, 0.5} × 5 seeds × 20 σ re-tuned per level (A#6), giving 15 × 11 × 5 × 20 = 16,500 FGAS runs. Secondary protocol: σ fixed at the clean best value.
+- [x] This is where the GPU helps most. Each (dataset, level, seed) runs the batched 20-σ GPU kernel once, so 825 batched runs instead of 16,500 single ones. ⏸ Ask before launching if the timing measured in M3/M4 projects more than 30 min.
+- [x] Fig. 2 in the paper's layout (2 panels, noise level 0–0.5), plotting the mean over seeds with a min–max band. A single-seed version is also produced to match the paper exactly.
+- [x] Commit: `M7: attribute-noise experiment and Fig. 2`
 
 ### M8 — Phase 3 write-up
-- [ ] `RESULTS.md`:
+- [x] `RESULTS.md`:
   - side-by-side tables (ours | paper | Δ | % deviation | status)
   - the squared-vs-abs finding
   - best σ vs Fig. 4
   - the Fig. 2/Fig. 4 inconsistencies (A#5, A#6)
   - likely causes for each gap
   - runtimes and environment
-- [ ] Commit: `M8: results report`
+- [x] Commit: `M8: results report`
 
 ## 5. How each result is validated
 
@@ -229,3 +229,14 @@ AUCs are printed to 3 decimals, so rounding alone allows ±0.0005.
 4. ⏸ Before installing pyod/PyNomaly (M6), and before any baseline run over 30 min.
 5. ⏸ Before the M7 noise sweep (likely over 30 min).
 6. ⏸ Any time a paper detail turns out to be contradictory in a way NOTES.md doesn't already cover.
+
+
+---
+**Status 2026-11-06:** M0–M8 complete (commits 8d28a90 … M8). Deviations from this plan:
+- σ grid changed to 0…1 (A#4 resolved in M4)
+- FGD headline switched to abs (user, after M3)
+- noise protocol switched to one attribute (user, after the M7 pre-check)
+- σ batching on GPU is done for the granule step only; FGD and power iteration run per σ, because 20 n×n matrices don't fit in VRAM for Satellite
+- the noise experiment used the step-0.1 σ grid that matches Fig. 2
+
+See RESULTS.md.
