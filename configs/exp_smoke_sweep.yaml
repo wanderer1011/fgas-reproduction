@@ -1,0 +1,4 @@
+name: smoke_sweep
+datasets: [Iris, Wine]
+sigmas: grid
+fgd_variants: [squared, abs]

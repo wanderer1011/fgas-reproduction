@@ -1,0 +1,4 @@
+name: smoke
+datasets: [Iris, Wine]
+sigmas: [0.6]
+fgd_variants: [squared, abs]

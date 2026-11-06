@@ -1,0 +1,8 @@
+name: bench
+datasets: [Sate, Musk]
+sigmas: grid
+fgd_variants: [squared]
+settings:              # (device, dtype) combinations to benchmark
+  - {device: cpu,  dtype: float64}
+  - {device: cuda, dtype: float64}
+  - {device: cuda, dtype: float32}

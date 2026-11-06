@@ -1,0 +1,17 @@
+# Approximate values read by eye from 300-dpi renders of the PDF (NOTES.md E3/E5). Precision ~ +-0.003.
+fig4_sigma_grid: [0.0, 0.95, 0.05]
+fig4_peaks:   # abbr: [approx best AUC, approx best sigma]
+  Card: [0.952, 0.25]
+  Diab: [0.989, 0.875]
+  Ecoli: [0.912, 0.6]      # disagrees with Table 2 (0.955), A#5
+  Iris: [1.000, 0.85]
+  Pima: [0.971, 0.8]
+  Page: [0.960, 0.25]
+  Sate: [0.734, 0.8]
+  Wine: [0.885, 0.8]
+  Thyro: [0.985, 0.95]
+  Wpbc: [0.51, 0.8]        # sigma 0.85-0.95 hidden under legend
+fig2_noise_levels: [0.0, 0.5, 0.05]
+fig2_noise0:
+  Thyro: 0.959             # disagrees with Table 2 (0.985), A#6
+fig3_stats: {tau_F: 15.1347, F_crit_0.1: 1.5610, CD_0.1: 4.7659, df: [13, 182]}

@@ -1,0 +1,21 @@
+# Table 1 of the paper (expected shapes) + Table 2 FGAS AUC (targets).
+source:
+  repo: BELLoney/FGAS
+  commit: b450898434d8f9ef78b9227b9b5d142a10af1fb6
+  path: Datasets
+datasets:
+  - {no: 1, abbr: Card, file: cardio.mat, n_attr: 21, n_obj: 1831, n_outliers: 176, paper_auc_fgas: 0.953}
+  - {no: 2, abbr: Diab, file: diabetes_tested_positive_26_variant1.mat, n_attr: 8, n_obj: 526, n_outliers: 26, paper_auc_fgas: 0.989}
+  - {no: 3, abbr: Ecoli, file: ecoli.mat, n_attr: 7, n_obj: 336, n_outliers: 9, paper_auc_fgas: 0.955}
+  - {no: 4, abbr: Ionos, file: ionosphere_b_24_variant1.mat, n_attr: 34, n_obj: 249, n_outliers: 24, paper_auc_fgas: 1.0}
+  - {no: 5, abbr: Iris, file: iris_Irisvirginica_11_variant1.mat, n_attr: 4, n_obj: 111, n_outliers: 11, paper_auc_fgas: 1.0}
+  - {no: 6, abbr: Musk, file: musk.mat, n_attr: 166, n_obj: 3062, n_outliers: 97, paper_auc_fgas: 1.0}
+  - {no: 7, abbr: Page, file: pageblocks_1_258_variant1.mat, n_attr: 10, n_obj: 5171, n_outliers: 258, paper_auc_fgas: 0.96}
+  - {no: 8, abbr: Pima, file: pima_TRUE_55_variant1.mat, n_attr: 9, n_obj: 555, n_outliers: 55, paper_auc_fgas: 0.971}
+  - {no: 9, abbr: Sate, file: satellite.mat, n_attr: 36, n_obj: 6435, n_outliers: 2036, paper_auc_fgas: 0.734}
+  - {no: 10, abbr: Sonar, file: sonar_M_10_variant1.mat, n_attr: 60, n_obj: 107, n_outliers: 10, paper_auc_fgas: 0.995}
+  - {no: 11, abbr: Thyro, file: thyroid.mat, n_attr: 6, n_obj: 3772, n_outliers: 93, paper_auc_fgas: 0.985}
+  - {no: 12, abbr: Wbc, file: wbc_malignant_39_variant1.mat, n_attr: 9, n_obj: 483, n_outliers: 39, paper_auc_fgas: 0.997}
+  - {no: 13, abbr: Wdbc, file: wdbc_M_39_variant1.mat, n_attr: 31, n_obj: 396, n_outliers: 39, paper_auc_fgas: 0.998}
+  - {no: 14, abbr: Wine, file: wine.mat, n_attr: 13, n_obj: 129, n_outliers: 10, paper_auc_fgas: 0.885}
+  - {no: 15, abbr: Wpbc, file: wpbc_variant1.mat, n_attr: 33, n_obj: 198, n_outliers: 47, paper_auc_fgas: 0.594}
