@@ -1,0 +1,82 @@
+{
+  "cardio.mat": {
+    "sha256": "7392e978abb0f452f4249a9719d090566ae48661cbc4e18312af68de6f6583c2",
+    "bytes": 71240,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/cardio.mat"
+  },
+  "diabetes_tested_positive_26_variant1.mat": {
+    "sha256": "736a5001fd305a44dc0d12cd1479574243a48d3ad64e419a594c04684c20db65",
+    "bytes": 11539,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/diabetes_tested_positive_26_variant1.mat"
+  },
+  "ecoli.mat": {
+    "sha256": "4d9749d2876760da134440e02705f989e797572e857b15c8c553bbd6f2c56c65",
+    "bytes": 4123,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/ecoli.mat"
+  },
+  "ionosphere_b_24_variant1.mat": {
+    "sha256": "ab932598cbbb987d4016b890c7041aa00aafc21a1c872d9f08d5192384554477",
+    "bytes": 46271,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/ionosphere_b_24_variant1.mat"
+  },
+  "iris_Irisvirginica_11_variant1.mat": {
+    "sha256": "32fdd9f9610c88af3898e29a5b1e87911bafcf7f4d48a67f292219749afbc56e",
+    "bytes": 990,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/iris_Irisvirginica_11_variant1.mat"
+  },
+  "musk.mat": {
+    "sha256": "16bd407c657ba440b0a52ba512ea86669f58e09e5819543af005d7cd5127e10d",
+    "bytes": 1091759,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/musk.mat"
+  },
+  "pageblocks_1_258_variant1.mat": {
+    "sha256": "a35c074b06be2b75af1e27163f18a8284a87e03a63d3b5b458adea5db508f815",
+    "bytes": 175851,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/pageblocks_1_258_variant1.mat"
+  },
+  "pima_TRUE_55_variant1.mat": {
+    "sha256": "d74688c80199338d3f8514abd4b874e31958a434cc273edc8dcae8ae2f0d00f3",
+    "bytes": 13326,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/pima_TRUE_55_variant1.mat"
+  },
+  "satellite.mat": {
+    "sha256": "8a595ca8f93923bf9f0571246c2c6d488d9eaa3227c7924329f979d40907d4cc",
+    "bytes": 289550,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/satellite.mat"
+  },
+  "sonar_M_10_variant1.mat": {
+    "sha256": "c19d7e400cb795877bab00bfd94af4738f349ded10b55b81a855ea328e9d4f30",
+    "bytes": 42222,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/sonar_M_10_variant1.mat"
+  },
+  "thyroid.mat": {
+    "sha256": "5b30bac96b399b94e6b681fcfaa4d3f378bbc2ad6344b4b55fb68c9bf73b8c29",
+    "bytes": 52501,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/thyroid.mat"
+  },
+  "wbc_malignant_39_variant1.mat": {
+    "sha256": "c37def19a6c4116b04aea5c981fb98b492806e5b70e08069aee81db99be6b76c",
+    "bytes": 2728,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/wbc_malignant_39_variant1.mat"
+  },
+  "wdbc_M_39_variant1.mat": {
+    "sha256": "9edc72ac5bdf455fec920655f8fa54c4cbd97093edcdd9a7c30bfbd46a3aa785",
+    "bytes": 82954,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/wdbc_M_39_variant1.mat"
+  },
+  "wine.mat": {
+    "sha256": "2980f8d9a5847a78556f341c7a1ae1ce47355b36afd7556409f85d756ee4ef71",
+    "bytes": 7020,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/wine.mat"
+  },
+  "wpbc_variant1.mat": {
+    "sha256": "95cd8f8397f2af143a827e924b0a459de15d88d39543ca85d45fb2037ff00545",
+    "bytes": 43423,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Datasets/wpbc_variant1.mat"
+  },
+  "Example.mat": {
+    "sha256": "8732b400a5edf906481d419869b9ad7cd50937acd9924c46137d248b50649109",
+    "bytes": 280,
+    "source": "BELLoney/FGAS@b450898434d8f9ef78b9227b9b5d142a10af1fb6:Code/Example.mat"
+  }
+}
