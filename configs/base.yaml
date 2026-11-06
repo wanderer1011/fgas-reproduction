@@ -13,7 +13,7 @@ preprocess:
   impute: mode           # "maximum frequency method" (P); applied on raw values before scaling (A#9)
   scaling: minmax        # per attribute to [0,1]; constant attribute -> 0 (A#8)
 backend:
-  device: cpu            # cpu | cuda
+  device: cuda           # cpu | cuda  (M3 benchmark: cuda-float64 chosen; float32 failed AUC parity)
   dtype: float64         # float64 | float32
   gpu_chunk_rows: 1024   # rows per block when building n x n blocks on GPU
 seed: 0

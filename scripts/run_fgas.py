@@ -70,10 +70,9 @@ def main() -> int:
                                      max_iter=f["max_iter"], device=dev, dtype=dt,
                                      chunk_rows=cfg["backend"]["gpu_chunk_rows"])
                     secs = time.perf_counter() - t0
-                    peak = None
-                    if dev == "cuda":
-                        import cupy as cp
-                        peak = cp.get_default_memory_pool().total_bytes() / 1e6
+                    peak = res[0].extra.get("peak_vram_mb")
+                    if peak:
+                        run.notes[f"peak_vram_mb|{abbr}|{fgd}|{dt}"] = round(peak, 1)
                     run.timings[f"{abbr}|{fgd}|{dev}|{dt}"] = round(secs, 3)
                     for r in res:
                         a = auc(ds.y, r.scores) if r.scores is not None else float("nan")

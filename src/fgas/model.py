@@ -128,7 +128,10 @@ def fgas_sweep(X, sigmas, *, fgd="squared", d=0.1, tol=1e-3, max_iter=10000,
                                   it, res, conv, degen))
         del D
     if device == "cuda":
-        xp.get_default_memory_pool().free_all_blocks()
+        pool = xp.get_default_memory_pool()
+        # freed blocks stay cached in the pool, so its size here is the peak of this sweep
+        results[0].extra["peak_vram_mb"] = pool.total_bytes() / 1e6
+        pool.free_all_blocks()
     return results
 
 
