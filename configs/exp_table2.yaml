@@ -1,0 +1,4 @@
+name: table2
+datasets: all
+sigmas: grid
+fgd_variants: [abs, squared]   # abs = headline (official code), squared = Eq. 7 as printed

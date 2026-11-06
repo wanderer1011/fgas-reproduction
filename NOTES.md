@@ -163,7 +163,8 @@ Each item lists the gap, then my **proposed default (flagged ASSUMPTION)**. ⚠ 
    - The official code (`Dis = Dis + pdist2(temp,temp)` on a single column) uses the **sum of absolute** differences.
    - These give different transition matrices and different rankings.
    - The paper also says FGD is "a qualified distance measure". The squared form isn't a metric (it breaks the triangle inequality); the L1 form is.
-   - **ASSUMPTION:** implement both as a config switch (`fgd: squared | abs`). Report **squared (paper = spec)** as the primary result and code-L1 as a variant. If L1 matches Table 2 and squared doesn't, that will tell us which one produced the published numbers.
+   - ~~ASSUMPTION: implement both as a config switch (`fgd: squared | abs`). Report squared (paper = spec) as the primary result and code-L1 as a variant.~~
+   - **RESOLVED (M3, 2026-11-06, user decision):** with abs FGD, the Iris and Wine σ-curves match Fig. 4 point for point and match Table 2 exactly; squared FGD does not. **Headline = abs (official code).** Squared (Eq. 7 as printed) is always run and reported as a variant. See `results/M3_smoke_and_benchmark.md`.
 2. **Stopping tolerance.** The paper uses 1e-3; the code iterates while the change is > 1e-4.
    - **ASSUMPTION:** 1e-3, as the spec says, plus a check that 1e-4 gives the same AUCs to 3 decimals. Also a max-iteration cap (e.g. 10,000) as a safeguard, which neither the paper nor the code has.
 3. **Damping term d.**
@@ -172,16 +173,20 @@ Each item lists the gap, then my **proposed default (flagged ASSUMPTION)**. ⚠ 
    - **ASSUMPTION:** scalar d as written in Eq. 9 and the code.
 4. **σ grid endpoint.**
    - Eq. 3 says σ ∈ [0,1). The text says "0 to 1 in steps of 0.05". Fig. 4 plots 0…0.95.
-   - **ASSUMPTION:** search 0…0.95 (20 values), matching Eq. 3 and Fig. 4. Log σ = 1.0 separately for information only.
+   - ~~ASSUMPTION: search 0…0.95 (20 values), matching Eq. 3 and Fig. 4. Log σ = 1.0 separately for information only.~~
+   - **RESOLVED (M4):** the assumption was wrong. Table 2 is the max over **σ ∈ {0, 0.05, …, 1.0} (21 values)**, as the text says. Ecoli (0.9555) and Wpbc (0.5941) peak at σ = 1.0. Fig. 4 simply doesn't plot σ = 1.0. The config now uses 0…1. `results/table2_fgas.md` shows 15/15 matches.
 5. **⚠ Fig. 4 doesn't fully agree with Table 2.**
    - **Ecoli:** Table 2 and Fig. 2 (at noise 0) both give **0.955**, but the Ecoli curve in Fig. 4 peaks around **0.912** (σ = 0.6). The legend hides σ = 0.85, but a point at 0.955 would sit above the legend box and isn't visible.
    - **Wpbc:** the visible maximum in Fig. 4 is about 0.51 (σ ≤ 0.8). Its σ = 0.85–0.95 points are hidden behind the legend, so 0.594 could be there; this can't be checked.
    - **Card:** Fig. 4 peaks around 0.952 vs 0.953 in the table. That's within rounding.
    - **Proposal:** treat Table 2 as the target, record our full σ curves, and report the gap for each dataset. I won't try to explain the Ecoli gap beyond noting it.
+   - **RESOLVED (M4):** no inconsistency. Fig. 4 is consistent with Table 2 once σ = 1.0 is included (see #4). Our σ = 0…0.95 curves reproduce Fig. 4, including Ecoli's 0.912 peak at σ = 0.6 and Wpbc's ≈0.51–0.54 hidden behind the legend.
 6. **⚠ Fig. 2 (noise level 0) doesn't fully agree with Table 2.**
    - Thyroid at noise 0 is about **0.959** in Fig. 2 vs **0.985** in Table 2.
    - Every other dataset at noise 0 matches Table 2. That suggests the noise experiment used per-dataset best σ but a different setting for Thyroid, or some other inconsistency.
-   - **ASSUMPTION:** re-tune σ at every noise level, matching the Table 2 protocol, and also report the variant with σ fixed at the clean best value. Thyroid's mismatch will be flagged, not forced.
+   - ~~ASSUMPTION: re-tune σ at every noise level, matching the Table 2 protocol, and also report the variant with σ fixed at the clean best value. Thyroid's mismatch will be flagged, not forced.~~
+   - **RESOLVED (M4):** Fig. 2's noise-0 values equal the best AUC over a **coarser grid, σ ∈ {0, 0.1, …, 1.0}**, for all 15 datasets. Thyroid's best on that grid is 0.9591 at σ = 0.9 (0.95 isn't on it); Sonar is 0.9938 at 0.7. So Fig. 2 used a step-0.1 σ grid.
+   - **Still unknown:** whether σ was re-tuned at each noise level or fixed. **New proposal for M7:** σ grid {0, 0.1, …, 1.0}, re-tuned at each noise level (main), plus σ fixed at the clean step-0.1 best (secondary). Needs your OK before M7.
 7. **Noise-injection details are missing:**
    - ⌈xn⌉ corrupted values *per attribute* (each attribute independently) or for one chosen attribute
    - whether outliers can be corrupted

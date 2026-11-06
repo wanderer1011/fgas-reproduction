@@ -3,12 +3,14 @@ fgas:
   d: 0.1                 # damping factor, Eq. 9 (paper: 0.10)
   tol: 1.0e-3            # ||pi(t+1)-pi(t)||_1 stopping rule, Alg. 1 line 17 (code uses 1e-4; A#2)
   max_iter: 10000        # safety cap (not in paper/code)
-  fgd: squared           # squared = paper Eq. 7; abs = official code (A#1)
+  fgd: abs               # HEADLINE (user decision after M3): abs = official code; squared = paper Eq. 7 as printed (A#1)
 sigma_grid:
   start: 0.0
-  stop: 0.95             # inclusive; Eq. 3 sigma in [0,1), Fig. 4 plots 0..0.95 (A#4)
+  stop: 1.0              # inclusive. Paper text "0 to 1 in steps of 0.05". M4 showed Table 2 = max over 0..1
+                         # (Ecoli, Wpbc peak at sigma=1.0). Earlier assumption 0..0.95 (A#4) was wrong.
   step: 0.05
-  log_sigma_1: true      # also score sigma = 1.0, excluded from best-sigma search
+  log_sigma_1: false     # sigma = 1.0 is now part of the grid
+  plot_stop: 0.95        # Fig. 4 in the paper plots 0..0.95 only
 preprocess:
   impute: mode           # "maximum frequency method" (P); applied on raw values before scaling (A#9)
   scaling: minmax        # per attribute to [0,1]; constant attribute -> 0 (A#8)

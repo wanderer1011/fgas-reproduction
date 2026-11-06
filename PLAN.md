@@ -220,7 +220,7 @@ AUCs are printed to 3 decimals, so rounding alone allows ±0.0005.
 | Re-run baselines | paper column | \|Δ\| ≤ 0.01 | ≤ 0.03 | expected for some: implementations differ (A#14) |
 | Ranking claim | FGAS first on 12/15, CD separation | same set of significantly different methods | — | report honestly |
 
-**Squared vs abs:** both variants are always reported. The spec version (squared) is the headline. Whichever variant matches more datasets is identified as "most likely what the authors ran", as evidence rather than a silent choice.
+**Squared vs abs (updated after M3, user decision):** both variants are always reported. **The headline is abs (official code)**, because it reproduces Fig. 4 and Table 2 on Iris/Wine while squared doesn't. ~~The spec version (squared) is the headline.~~ Whichever variant matches more datasets is identified as "most likely what the authors ran", as evidence rather than a silent choice.
 
 ## 6. Points where I'll stop and ask (summary)
 1. ⏸ After M1, if the data doesn't match Table 1.
