@@ -12,7 +12,8 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from fgas.plots import fig4_sigma  # noqa: E402
+from fgas.plots import fig3_cd, fig4_sigma  # noqa: E402
+from fgas.stats import friedman_nemenyi  # noqa: E402
 
 
 def latest(pattern: str) -> str:
@@ -24,11 +25,36 @@ def latest(pattern: str) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("figure", choices=["fig4"])
+    ap.add_argument("figure", choices=["fig3", "fig4"])
     ap.add_argument("--run")
     args = ap.parse_args()
     out = ROOT / "results"
     out.mkdir(exist_ok=True)
+    if args.figure == "fig3":
+        paper = pd.read_csv(ROOT / "paper" / "table2_paper.csv", index_col=0)
+        ours = pd.read_csv(out / "table2_fgas.csv", index_col=0)
+        tables = {"paper": paper,
+                  "ours_fgas": paper.assign(FGAS=ours["abs_auc"])}  # our FGAS (full precision), paper baselines
+        mixed = out / "table2_mixed_baselines.csv"
+        if mixed.exists():
+            tables["ours_rerun"] = pd.read_csv(mixed, index_col=0)
+        lines = ["# Friedman / Nemenyi (alpha = 0.10)", "",
+                 "| Table | tau_F | df | F_crit | CD | FGAS avg rank | FGAS not sig. different from |",
+                 "|---|---|---|---|---|---|---|"]
+        for name, t in tables.items():
+            r = friedman_nemenyi(t)
+            p = out / f"fig3_cd_{name}.png"
+            fig3_cd(r.avg_rank, r.CD, p)
+            close = [a for a in r.avg_rank.index if a != "FGAS"
+                     and abs(r.avg_rank[a] - r.avg_rank["FGAS"]) < r.CD]
+            lines.append(f"| {name} | {r.tau_F:.4f} | {r.df} | {r.F_crit:.4f} | {r.CD:.4f} | "
+                         f"{r.avg_rank['FGAS']:.3f} | {', '.join(close)} |")
+            (out / f"fig3_ranks_{name}.csv").write_text(r.avg_rank.sort_values().to_csv())
+            print("wrote", p)
+        lines += ["", "Paper (Section 4.4): tau_F = 15.1347, F(13,182), F_crit = 1.5610, CD = 4.7659; "
+                  "FGAS not significantly different from kNN, WNINOD, IForest, DCROD."]
+        (out / "fig3_stats.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+        print("\n".join(lines))
     if args.figure == "fig4":
         run = Path(args.run or latest("*_table2"))
         cfg = yaml.safe_load((run / "config.yaml").read_text())

@@ -55,3 +55,56 @@ def fig4_sigma(df: pd.DataFrame, fgd: str, path, plot_stop: float = 0.95):
                     xlim=(0, 1),
                     yticks=[[0.85, 0.9, 0.95, 1.0], [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]],
                     title=f"Fig. 4 (reproduced, FGD = {fgd}). The variation curve of AUC on σ.", path=path)
+
+
+def fig3_cd(avg_rank: "pd.Series", cd: float, path, title: str = "Nemenyi's test figure on AUC."):
+    """Critical-difference diagram in the paper's orientation: axis k (left) -> 1 (right),
+    i.e. position = k + 1 - average rank (best algorithm on the left)."""
+    k = len(avg_rank)
+    pos = (k + 1 - avg_rank).sort_values(ascending=False)          # best first
+    names = list(pos.index)
+    half = (k + 1) // 2
+    left, right = names[:half], names[half:][::-1]                 # right side: worst first
+    fig, ax = plt.subplots(figsize=(7.2, 0.9 + 0.32 * max(len(left), len(right))))
+    X = lambda v: k + 1 - v  # noqa: E731  (data x so that 'k' is drawn on the left)
+    ax.set_xlim(X(k + 0.3), X(0.7))
+    top = 0.0
+    ax.plot([X(k), X(1)], [top, top], color="black", lw=1)
+    for t in range(1, k + 1):
+        ax.plot([X(t), X(t)], [top, top + 0.06], color="black", lw=1)
+        ax.text(X(t), top + 0.1, str(t), ha="center", va="bottom", fontsize=10)
+    # CD bar above the axis, starting at the left end
+    y_cd = top + 0.55
+    ax.plot([X(k), X(k - cd)], [y_cd, y_cd], color="red", lw=1)
+    for x in (X(k), X(k - cd)):
+        ax.plot([x, x], [y_cd - 0.05, y_cd + 0.05], color="red", lw=1)
+    ax.text((X(k) + X(k - cd)) / 2, y_cd + 0.08, f"CD={cd:.4f}", ha="center", va="bottom", fontsize=10)
+    step = 0.3
+    line_col = "#6A6ADB"
+    for i, n in enumerate(left):
+        y = -0.45 - step * (i + 1)
+        x = X(pos[n])
+        ax.plot([x, x, X(k + 0.1)], [top, y, y], color=line_col, lw=0.8)
+        ax.text(X(k + 0.2), y, n, ha="right", va="center", fontsize=10)
+    for i, n in enumerate(right):
+        y = -0.45 - step * (i + 1)
+        x = X(pos[n])
+        ax.plot([x, x, X(0.9)], [top, y, y], color=line_col, lw=0.8)
+        ax.text(X(0.8), y, n, ha="left", va="center", fontsize=10)
+    # cliques: maximal groups whose rank range is < CD (not significantly different)
+    r = pos.sort_values()  # ascending position
+    vals = r.to_numpy()
+    groups = []
+    for i in range(len(vals)):
+        j = max(jj for jj in range(i, len(vals)) if vals[jj] - vals[i] < cd)
+        if j > i and not any(a <= i and j <= b for a, b in groups):
+            groups.append((i, j))
+    for g, (i, j) in enumerate(groups):
+        y = -0.12 - 0.1 * g
+        ax.plot([X(vals[i]) + 0.03, X(vals[j]) - 0.03], [y, y], color="red", lw=1.2)
+    ax.set_ylim(-0.45 - step * (max(len(left), len(right)) + 1), y_cd + 0.4)
+    ax.axis("off")
+    fig.text(0.5, 0.01, title, ha="center", fontsize=10)
+    fig.tight_layout(rect=(0, 0.04, 1, 1))
+    fig.savefig(path, dpi=200)
+    plt.close(fig)
