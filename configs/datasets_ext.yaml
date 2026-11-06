@@ -1,0 +1,12 @@
+# Extension datasets (real-world applications), not part of the paper.
+# Format: npz = ADBench file with arrays X, y; secom = UCI SECOM (secom.data + secom_labels.data).
+datasets:
+  - {id: 101, abbr: Mammo, name: mammography, application: medical screening (mammography), format: npz,
+     url: "https://raw.githubusercontent.com/Minqi824/ADBench/3dac8221081e190f157d78e93bfa8867f90d0965/adbench/datasets/Classical/23_mammography.npz",
+     dir: data/raw_ext/adbench_mammography, file: 23_mammography.npz, expect: {n_obj: 11183, n_attr: 6, n_outliers: 260}}
+  - {id: 102, abbr: Annthy, name: annthyroid, application: clinical lab tests (thyroid), format: npz,
+     url: "https://raw.githubusercontent.com/Minqi824/ADBench/3dac8221081e190f157d78e93bfa8867f90d0965/adbench/datasets/Classical/2_annthyroid.npz",
+     dir: data/raw_ext/adbench_annthyroid, file: 2_annthyroid.npz, expect: {n_obj: 7200, n_attr: 6, n_outliers: 534}}
+  - {id: 103, abbr: SECOM, name: secom, application: semiconductor manufacturing (wafer fails), format: secom,
+     url: "https://archive.ics.uci.edu/static/public/179/secom.zip",
+     dir: data/raw_ext/uci_secom, file: secom.zip, expect: {n_obj: 1567, n_attr: 590, n_outliers: 104}}   # UCI lists 591 attributes incl. the label

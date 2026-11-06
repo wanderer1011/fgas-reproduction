@@ -24,8 +24,40 @@ def dataset_specs(path: str | Path = ROOT / "configs" / "datasets.yaml") -> dict
     return {d["abbr"]: d for d in cfg["datasets"]}
 
 
+def ext_specs(path: str | Path = ROOT / "configs" / "datasets_ext.yaml") -> dict[str, dict]:
+    """Extension (real-world application) datasets; expected shapes flattened like Table 1 specs."""
+    if not Path(path).exists():
+        return {}
+    cfg = yaml.safe_load(Path(path).read_text())
+    return {d["abbr"]: {**d, **d.get("expect", {})} for d in cfg["datasets"]}
+
+
+def all_specs() -> dict[str, dict]:
+    return {**dataset_specs(), **ext_specs()}
+
+
+def _load_ext(spec: dict) -> Dataset:
+    folder = ROOT / spec["dir"]
+    if spec["format"] == "npz":
+        z = np.load(folder / spec["file"], allow_pickle=False)
+        X, y = np.asarray(z["X"], dtype=np.float64), np.asarray(z["y"]).astype(int)
+    elif spec["format"] == "secom":
+        X = np.genfromtxt(folder / "secom.data")
+        lab = np.genfromtxt(folder / "secom_labels.data", usecols=0)
+        y = (lab == 1).astype(int)  # 1 = fail (anomaly), -1 = pass
+    else:
+        raise ValueError(spec["format"])
+    if not set(np.unique(y).tolist()) <= {0, 1}:
+        raise ValueError(f"{spec['abbr']}: non-binary labels")
+    return Dataset(spec["abbr"], X, y, spec)
+
+
 def load_dataset(abbr: str, data_dir: str | Path = ROOT / "data" / "raw") -> Dataset:
-    """Load a repo .mat file. Layout (verified in M1): key 'trandata', last column = label."""
+    """Load a repo .mat file (layout verified in M1: key 'trandata', last column = label),
+    or an extension dataset from configs/datasets_ext.yaml."""
+    ext = ext_specs()
+    if abbr in ext:
+        return _load_ext(ext[abbr])
     spec = dataset_specs()[abbr]
     mat = sio.loadmat(Path(data_dir) / spec["file"])
     arr = np.asarray(mat["trandata"], dtype=np.float64)

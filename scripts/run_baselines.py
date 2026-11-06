@@ -15,7 +15,7 @@ from joblib import Parallel, delayed
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from fgas.baselines import score  # noqa: E402
-from fgas.data import dataset_specs, load_dataset, preprocess  # noqa: E402
+from fgas.data import all_specs, dataset_specs, load_dataset, preprocess  # noqa: E402
 from fgas.metrics import auc  # noqa: E402
 from fgas.runlog import Run, load_config  # noqa: E402
 
@@ -53,7 +53,7 @@ def main() -> int:
                 for seed in p.get("seeds", [cfg["seed"]]):
                     tasks.append((abbr, m, k, seed))
     # longest-first: big datasets and large k first, for better load balance
-    size = {a: dataset_specs()[a]["n_obj"] for a in datasets}
+    size = {a: all_specs()[a]["n_obj"] for a in datasets}
     tasks.sort(key=lambda t: -(size[t[0]] * (t[2] or 1)))
     with Run(cfg) as run:
         print(f"run {run.id}: {len(tasks)} fits on {cfg['n_jobs']} processes", flush=True)

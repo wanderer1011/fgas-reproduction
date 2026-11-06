@@ -13,7 +13,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from fgas.data import dataset_specs, load_dataset, preprocess  # noqa: E402
+from fgas.data import all_specs, dataset_specs, load_dataset, preprocess  # noqa: E402
 from fgas.metrics import auc  # noqa: E402
 from fgas.model import fgas_sweep  # noqa: E402
 from fgas.noise import add_attribute_noise, noise_rng  # noqa: E402
@@ -40,7 +40,7 @@ def main() -> int:
         cfg["name"] = f"noise_{args.mode}"
     if args.seeds is not None:
         cfg["seeds"] = args.seeds
-    specs = dataset_specs()
+    specs = all_specs()
     datasets = list(specs) if cfg["datasets"] == "all" else cfg["datasets"]
     levels, sigmas = grid(cfg["noise_levels"]), grid(cfg["noise_sigma_grid"])
     f, be = cfg["fgas"], cfg["backend"]

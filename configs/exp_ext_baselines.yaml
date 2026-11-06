@@ -1,0 +1,10 @@
+name: ext_baselines
+datasets: [Mammo, Annthy, SECOM]
+n_jobs: 6                 # 6 not 8: COF on Mammo holds ~1 GB n x n per process
+methods:
+  kNN:      {k: [1, 60]}
+  COF:      {k: [1, 60]}
+  FastABOD: {k: [1, 60]}
+  LoOP:     {k: [1, 60]}
+  ECOD:     {}
+  IForest:  {seeds: [0, 1, 2, 3, 4]}

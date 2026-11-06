@@ -1,0 +1,25 @@
+dataset,method,auc,std,setting,rank
+Mammo,"FGAS (abs, best σ)",0.8721,,σ=0.25,2.0000
+Mammo,"FGAS (abs, σ=0.8 fixed)",0.8437,,no labels,6.0000
+Mammo,"FGAS (squared, best σ)",0.8604,,σ=0.20,3.0000
+Mammo,"FGAS (squared, σ=0.8 fixed)",0.8368,,no labels,7.0000
+Mammo,ECOD,0.9062,,-,1.0000
+Mammo,IForest,0.8588,0.0044,5 seeds,4.0000
+Mammo,LoOP,0.7697,,k=60,8.0000
+Mammo,kNN,0.8461,,k=21,5.0000
+Annthy,"FGAS (abs, best σ)",0.7067,,σ=0.15,5.0000
+Annthy,"FGAS (abs, σ=0.8 fixed)",0.6784,,no labels,6.0000
+Annthy,"FGAS (squared, best σ)",0.6347,,σ=0.95,7.0000
+Annthy,"FGAS (squared, σ=0.8 fixed)",0.5998,,no labels,8.0000
+Annthy,ECOD,0.7887,,-,2.0000
+Annthy,IForest,0.8274,0.0153,5 seeds,1.0000
+Annthy,LoOP,0.7308,,k=59,4.0000
+Annthy,kNN,0.7608,,k=1,3.0000
+SECOM,"FGAS (abs, best σ)",0.5776,,σ=0.95,2.0000
+SECOM,"FGAS (abs, σ=0.8 fixed)",0.5211,,no labels,8.0000
+SECOM,"FGAS (squared, best σ)",0.5847,,σ=0.95,1.0000
+SECOM,"FGAS (squared, σ=0.8 fixed)",0.5319,,no labels,7.0000
+SECOM,ECOD,0.5591,,-,4.0000
+SECOM,IForest,0.5511,0.0161,5 seeds,6.0000
+SECOM,LoOP,0.5691,,k=4,3.0000
+SECOM,kNN,0.5530,,k=2,5.0000

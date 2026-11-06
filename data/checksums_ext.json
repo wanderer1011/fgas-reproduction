@@ -1,0 +1,20 @@
+{
+  "Mammo": {
+    "file": "data\\raw_ext\\adbench_mammography\\23_mammography.npz",
+    "bytes": 166764,
+    "sha256": "a0308ac9712d78321073b1c2dc98dc37665c0f35c1cc33019416fe8f8d7de7ea",
+    "url": "https://raw.githubusercontent.com/Minqi824/ADBench/3dac8221081e190f157d78e93bfa8867f90d0965/adbench/datasets/Classical/23_mammography.npz"
+  },
+  "Annthy": {
+    "file": "data\\raw_ext\\adbench_annthyroid\\2_annthyroid.npz",
+    "bytes": 66547,
+    "sha256": "e738f7c58a8740d2c4aac4c71ff49ce5e1d1aa16f44178135fc9c09df05fad1b",
+    "url": "https://raw.githubusercontent.com/Minqi824/ADBench/3dac8221081e190f157d78e93bfa8867f90d0965/adbench/datasets/Classical/2_annthyroid.npz"
+  },
+  "SECOM": {
+    "file": "data\\raw_ext\\uci_secom\\secom.zip",
+    "bytes": 1964989,
+    "sha256": "eea568baf3c2229096d7d294cf0b096b5502bd96d92c0b80a65b84714059be8e",
+    "url": "https://archive.ics.uci.edu/static/public/179/secom.zip"
+  }
+}

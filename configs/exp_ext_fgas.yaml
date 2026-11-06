@@ -1,0 +1,4 @@
+name: ext_fgas
+datasets: [Mammo, Annthy, SECOM]
+sigmas: grid
+fgd_variants: [abs, squared]
