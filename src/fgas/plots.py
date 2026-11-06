@@ -108,3 +108,37 @@ def fig3_cd(avg_rank: "pd.Series", cd: float, path, title: str = "Nemenyi's test
     fig.tight_layout(rect=(0, 0.04, 1, 1))
     fig.savefig(path, dpi=200)
     plt.close(fig)
+
+
+# Colours approximating the paper's Fig. 1 legend; FGAS is black as in the paper.
+ROC_COLORS = {"DIS": "#FF0000", "COF": "#00CC00", "FastABOD": "#00E5FF", "INFLO": "#FF00FF",
+              "kNN": "#3333AA", "LDOF": "#E06A00", "LoOP": "#E0B000", "ODIN": "#8000A0",
+              "DCROD": "#2E8B57", "ECOD": "#20B2AA", "IForest": "#1F3FBF", "OutRanka": "#3070B0",
+              "WNINOD": "#0000FF", "FGAS": "#000000"}
+
+
+def fig1_roc(curves: dict, order: list, path, methods: list):
+    """curves[(dataset, method)] = (fpr, tpr). 5x3 grid, axes in %, FGAS drawn last (on top)."""
+    from string import ascii_lowercase
+    fig, axes = plt.subplots(5, 3, figsize=(10.5, 16))
+    for i, (ax, ds) in enumerate(zip(axes.flat, order)):
+        for m in methods:
+            if (ds, m) in curves:
+                fpr, tpr = curves[(ds, m)]
+                ax.plot(100 * fpr, 100 * tpr, color=ROC_COLORS.get(m, "gray"), lw=1.6 if m == "FGAS" else 0.9,
+                        label=m, zorder=3 if m == "FGAS" else 2, drawstyle="default")
+        ax.set_xlim(0, 100)
+        ax.set_ylim(0, 100)
+        ax.set_xticks(range(0, 101, 10))
+        ax.set_yticks(range(0, 101, 10))
+        ax.tick_params(labelsize=7, direction="in", top=True, right=True)
+        ax.set_xlabel("FPR (%)", fontsize=8)
+        ax.set_ylabel("TPR (%)", fontsize=8)
+        ax.legend(loc="lower right", fontsize=6, frameon=True, fancybox=False, edgecolor="black",
+                  handlelength=1.5, borderpad=0.3, labelspacing=0.15)
+        ax.set_title(f"({ascii_lowercase[i]})  {ds}", y=-0.32, fontsize=11)
+    fig.text(0.5, 0.005, "Fig. 1 (reproduced). Comparison results on ROC — FGAS and the re-run baselines "
+             "only (paper-only baselines have no scores to plot).", ha="center", fontsize=9)
+    fig.tight_layout(rect=(0, 0.015, 1, 1), h_pad=2.2)
+    fig.savefig(path, dpi=150)
+    plt.close(fig)

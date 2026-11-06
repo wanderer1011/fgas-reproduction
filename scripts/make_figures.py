@@ -12,7 +12,10 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from fgas.plots import fig3_cd, fig4_sigma  # noqa: E402
+from fgas.plots import fig1_roc, fig3_cd, fig4_sigma  # noqa: E402
+from fgas.data import dataset_specs, load_dataset  # noqa: E402
+from fgas.metrics import roc_points  # noqa: E402
+import numpy as np  # noqa: E402
 from fgas.stats import friedman_nemenyi  # noqa: E402
 
 
@@ -25,11 +28,33 @@ def latest(pattern: str) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("figure", choices=["fig3", "fig4"])
+    ap.add_argument("figure", choices=["fig1", "fig3", "fig4"])
     ap.add_argument("--run")
     args = ap.parse_args()
     out = ROOT / "results"
     out.mkdir(exist_ok=True)
+    if args.figure == "fig1":
+        t2 = Path(latest("*_table2"))
+        best = pd.read_csv(out / "table2_fgas.csv", index_col=0)
+        fg = np.load(t2 / "scores.npz")
+        bl_run = Path(args.run) if args.run else Path([r for r in sorted(glob.glob(str(ROOT / "runs" / "*_baselines")))
+                                                      if len(pd.read_csv(Path(r) / "auc.csv").dataset.unique()) == 15][-1])
+        bl = np.load(bl_run / "scores.npz")
+        order = list(dataset_specs())
+        curves, methods = {}, []
+        for key in bl.files:
+            ds, m, _ = key.split("|")
+            y = load_dataset(ds).y
+            curves[(ds, m)] = roc_points(y, bl[key])
+            if m not in methods:
+                methods.append(m)
+        for ds in order:
+            y = load_dataset(ds).y
+            s = fg[f"{ds}|abs|cuda|float64|{best.loc[ds, 'abs_sigma']:.2f}"]
+            curves[(ds, "FGAS")] = roc_points(y, s)
+        p = out / "fig1_roc.png"
+        fig1_roc(curves, order, p, methods + ["FGAS"])
+        print("wrote", p, "| baselines from", bl_run.name)
     if args.figure == "fig3":
         paper = pd.read_csv(ROOT / "paper" / "table2_paper.csv", index_col=0)
         ours = pd.read_csv(out / "table2_fgas.csv", index_col=0)
