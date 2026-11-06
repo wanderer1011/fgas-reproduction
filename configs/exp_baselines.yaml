@@ -1,0 +1,10 @@
+name: baselines
+datasets: all
+n_jobs: 8                 # parallel processes over (dataset, method, k)
+methods:
+  kNN:      {k: [1, 60]}  # inclusive range, step 1 (paper)
+  COF:      {k: [1, 60]}
+  FastABOD: {k: [1, 60]}
+  LoOP:     {k: [1, 60]}
+  ECOD:     {}
+  IForest:  {seeds: [0, 1, 2, 3, 4]}   # 100 trees (pyod default n_estimators=100); A#15
