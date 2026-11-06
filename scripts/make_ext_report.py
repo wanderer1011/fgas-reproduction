@@ -56,7 +56,7 @@ def main() -> int:
             rows.append(dict(dataset=ds, method=m, auc=per_seed.mean(),
                              std=per_seed.std() if len(per_seed) > 1 else np.nan,
                              setting=(f"k={int(k)}" if pd.notna(k) else ("5 seeds" if m == "IForest" else "-"))
-                             + (f", {int(g.auc.isna().sum())} NaN fits" if g.auc.isna().any() else "")))
+                             + (f", {int(g.auc.isna().sum())} failed fits" if g.auc.isna().any() else "")))
     t = pd.DataFrame(rows)
     t["rank"] = t.groupby("dataset").auc.rank(ascending=False, method="min")
     out = ROOT / "results"
