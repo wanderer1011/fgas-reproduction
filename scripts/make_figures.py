@@ -12,7 +12,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from fgas.plots import fig1_roc, fig3_cd, fig4_sigma  # noqa: E402
+from fgas.plots import fig1_roc, fig2_noise, fig3_cd, fig4_sigma  # noqa: E402
 from fgas.data import dataset_specs, load_dataset  # noqa: E402
 from fgas.metrics import roc_points  # noqa: E402
 import numpy as np  # noqa: E402
@@ -28,7 +28,7 @@ def latest(pattern: str) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("figure", choices=["fig1", "fig3", "fig4"])
+    ap.add_argument("figure", choices=["fig1", "fig2", "fig3", "fig4"])
     ap.add_argument("--run")
     args = ap.parse_args()
     out = ROOT / "results"
@@ -55,6 +55,53 @@ def main() -> int:
         p = out / "fig1_roc.png"
         fig1_roc(curves, order, p, methods + ["FGAS"])
         print("wrote", p, "| baselines from", bl_run.name)
+    if args.figure == "fig2":
+        run = Path(args.run or latest("*_noise"))
+        df = pd.read_csv(run / "auc.csv")
+        df["level"] = df.level.round(2)
+        order = list(dataset_specs())
+        # main protocol: sigma re-tuned per (level, seed)
+        best = df.groupby(["dataset", "level", "seed"]).auc.max().reset_index()
+        # secondary: sigma fixed at the clean (level 0) best on the same step-0.1 grid
+        clean = df[df.level == 0].loc[lambda d: d.groupby("dataset").auc.idxmax()].set_index("dataset").sigma
+        fixed = df[df.apply(lambda r: abs(r.sigma - clean[r.dataset]) < 1e-9, axis=1)]
+        fixed = fixed.groupby(["dataset", "level", "seed"]).auc.max().reset_index()
+        read = pd.read_csv(ROOT / "paper" / "fig2_readings.csv", comment="#", index_col=0)
+        read.columns = [round(float(c), 2) for c in read.columns]
+        summary = []
+        for name, d in [("retuned", best), ("fixed", fixed)]:
+            g = d.groupby(["level", "dataset"]).auc
+            mean, lo, hi = (g.mean().unstack(), g.min().unstack(), g.max().unstack())
+            fig2_noise(mean, out / f"fig2_noise_{name}.png", lo, hi,
+                       title=f"Fig. 2 (reproduced; one-attribute noise, sigma {name}, mean of seeds, band = min-max).")
+            s0 = d[d.seed == 0].groupby(["level", "dataset"]).auc.mean().unstack()
+            fig2_noise(s0, out / f"fig2_noise_{name}_seed0.png",
+                       title=f"Fig. 2 (reproduced; one-attribute noise, sigma {name}, single seed 0).")
+            for ds in order:
+                ours, pap = mean[ds], read.loc[ds]
+                summary.append(dict(protocol=name, dataset=ds, clean=ours.loc[0.0], paper_clean=pap.loc[0.0],
+                                    ours_at_0_5=ours.loc[0.5], paper_at_0_5=pap.loc[0.5],
+                                    ours_min=ours.min(), paper_min=pap.min(),
+                                    ours_max_drop=ours.loc[0.0] - ours.min(), paper_max_drop=pap.loc[0.0] - pap.min(),
+                                    mae_vs_paper=(ours - pap).abs().mean(),
+                                    seed_spread=(hi[ds] - lo[ds]).max()))
+        sm = pd.DataFrame(summary)
+        sm.to_csv(out / "fig2_vs_paper.csv", index=False, float_format="%.4f")
+        lines = ["# Fig. 2 — attribute noise: ours vs paper (read off the figure, +-0.003)", "",
+                 f"Run: `{run.name}`; one-attribute noise; sigma grid 0..1 step 0.1; mean over seeds.", ""]
+        for name in ["retuned", "fixed"]:
+            t = sm[sm.protocol == name]
+            lines += [f"## sigma {name}", "",
+                      "| Dataset | clean ours/paper | x=0.5 ours/paper | max drop ours/paper | MAE vs paper | seed spread |",
+                      "|---|---|---|---|---|---|"]
+            for _, r in t.iterrows():
+                lines.append(f"| {r.dataset} | {r.clean:.3f} / {r.paper_clean:.3f} | {r.ours_at_0_5:.3f} / "
+                             f"{r.paper_at_0_5:.3f} | {r.ours_max_drop:.3f} / {r.paper_max_drop:.3f} | "
+                             f"{r.mae_vs_paper:.4f} | {r.seed_spread:.3f} |")
+            lines += ["", f"Mean MAE vs paper: {t.mae_vs_paper.mean():.4f}; datasets with MAE <= 0.01: "
+                          f"{(t.mae_vs_paper <= 0.01).sum()}/15", ""]
+        (out / "fig2_vs_paper.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+        print("\n".join(lines))
     if args.figure == "fig3":
         paper = pd.read_csv(ROOT / "paper" / "table2_paper.csv", index_col=0)
         ours = pd.read_csv(out / "table2_fgas.csv", index_col=0)

@@ -3,7 +3,7 @@ datasets: all
 fgd_variants: [abs]                 # headline variant
 noise_levels: {start: 0.0, stop: 0.5, step: 0.05}
 seeds: [0, 1, 2, 3, 4]
-noise_mode: all_attributes          # A#7 as approved; one_attribute matches the paper's Fig. 2 (M7 pre-check) - pending user decision
+noise_mode: one_attribute           # HEADLINE (user decision, M7 pre-check): matches Fig. 2; all_attributes kept as option
 noise_sigma_grid: {start: 0.0, stop: 1.0, step: 0.1}   # Fig. 2 noise-0 values = best over this grid (M4)
 # Main protocol: sigma re-tuned (best AUC) at every noise level / seed.
 # Secondary protocol (computed from the same run): sigma fixed at its clean (level 0) best value.

@@ -142,3 +142,35 @@ def fig1_roc(curves: dict, order: list, path, methods: list):
     fig.tight_layout(rect=(0, 0.015, 1, 1), h_pad=2.2)
     fig.savefig(path, dpi=150)
     plt.close(fig)
+
+
+def fig2_noise(mean: "pd.DataFrame", path, lo: "pd.DataFrame | None" = None, hi: "pd.DataFrame | None" = None,
+               title: str = "Fig. 2 (reproduced). Effect of attribute noise on AUC."):
+    """mean/lo/hi: index = noise level, columns = dataset. Optional band = min..max over seeds."""
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
+    ylims = [(0.90, 1.0), (0.55, 1.0)]
+    yt = [[0.90 + 0.01 * i for i in range(11)], [0.55 + 0.05 * i for i in range(10)]]
+    for k, (ax, names) in enumerate(zip(axes, PANELS)):
+        for i, ds in enumerate(names):
+            if ds not in mean:
+                continue
+            st = _style(i)
+            ax.plot(mean.index, mean[ds], label=ds, **st)
+            if lo is not None:
+                ax.fill_between(mean.index, lo[ds], hi[ds], color=st["color"], alpha=0.12, lw=0)
+        ax.set_xlabel("Noise level")
+        ax.set_ylabel("AUC")
+        ax.set_ylim(*ylims[k])
+        ax.set_yticks(yt[k])
+        ax.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter("%.3f"))
+        ax.set_xticks([round(0.05 * i, 2) for i in range(11)])
+        ax.set_xticklabels([f"{0.05 * i:g}" for i in range(11)])
+        ax.set_xlim(0, 0.5)
+        ax.tick_params(direction="in", top=True, right=True)
+        ax.legend(loc="lower right" if k == 1 else "lower right", frameon=True, fancybox=False,
+                  edgecolor="black", fontsize=9)
+        ax.set_title(f"({'ab'[k]})  Datasets {'1-8' if k == 0 else '9-15'}", y=-0.28, fontsize=11)
+    fig.suptitle(title, y=0.02, fontsize=10, va="bottom")
+    fig.tight_layout(rect=(0, 0.06, 1, 1))
+    fig.savefig(path, dpi=200)
+    plt.close(fig)

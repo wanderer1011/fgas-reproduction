@@ -193,7 +193,9 @@ Each item lists the gap, then my **proposed default (flagged ASSUMPTION)**. ⚠ 
    - number of repeats and seeds (the figure looks like one run)
    - whether noise is added before or after min-max scaling
 
-   **ASSUMPTION:** for **each** attribute independently, pick ⌈x·n⌉ random samples and replace their value with U[min_a, max_a] of the raw attribute, then min-max scale. All samples are eligible. Use 5 seeds and plot the mean (with a band), plus seed 0 alone in paper format.
+   ~~ASSUMPTION: for **each** attribute independently, pick ⌈x·n⌉ random samples and replace their value with U[min_a, max_a] of the raw attribute, then min-max scale. All samples are eligible. Use 5 seeds and plot the mean (with a band), plus seed 0 alone in paper format.~~
+
+   **RESOLVED (M7 pre-check, user decision 2026-11-06):** noising every attribute collapses AUC by 0.2–0.4 (e.g. Pima 0.971 → 0.622 at x = 0.5), unlike the flat curves in Fig. 2. **Headline = one randomly chosen attribute per (seed, level)**: ⌈x·n⌉ random samples get U[min_a, max_a] on that attribute, then min-max scaling. This reproduces Fig. 2's ranges and matches the wording "a specific attribute". All samples are eligible. σ ∈ {0, 0.1, …, 1.0} is re-tuned per level (main protocol); σ fixed at the clean best is secondary. 5 seeds. `noise_mode: all_attributes` remains available.
 8. **Preprocessing / scaling.** The paper never says to scale, but `1 − |a(o) − a(p)|` only works on [0,1]. The code says "All attributes should be normalized into [0,1]", and its demo uses `normalize(…,'range')`.
    - **ASSUMPTION:** per-attribute min-max scaling to [0,1] on the whole dataset. Constant attributes become 0.
 9. **Missing values.** The paper fills them with the mode, but doesn't say before or after scaling. The repo `.mat` files may already be complete.
